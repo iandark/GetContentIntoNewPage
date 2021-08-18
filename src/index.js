@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('https');
 const express = require('express');
 
 const app = express();
@@ -6,9 +6,19 @@ const app = express();
 app.use(express.json());
 
 app.get('/', (request, response) => {
-  response.sendFile(__dirname + '/index.html');
+    http.get('https://www.fundsexplorer.com.br/ranking', (res) => {
+        let rawHtml = '';
+        res.on('data', (chunk) => { rawHtml += chunk; });
+        res.on('end', () => {
+            try {
+                response.send(rawHtml);
+            } catch (e) {
+                console.error(e.message);
+            }
+        });
+    });
 });
 
 app.listen(process.env.PORT || 3333, () => {
-  console.log(`🔥 Back-end started on port ${process.env.PORT || 3333}!`);
+  console.log(`🔥 Started on port ${process.env.PORT || 3333}!`);
 });
