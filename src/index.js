@@ -1,13 +1,15 @@
 const http = require('https');
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
 
 app.get('/', (request, response) => {
-    http.get('https://www.fundsexplorer.com.br/ranking', (res) => {
+    http.get(process.env.URL, (res) => {
         let rawHtml = '';
+        res.setEncoding(process.env.ENCODING);
         res.on('data', (chunk) => { rawHtml += chunk; });
         res.on('end', () => {
             try {
